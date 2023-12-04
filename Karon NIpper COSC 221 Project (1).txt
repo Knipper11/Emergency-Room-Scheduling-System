@@ -1,0 +1,155 @@
+﻿package emergencyroom_scedulingsystem;
+import java.util.*;
+public class main {
+
+
+        public static void main(String[] args) {
+                // TODO Auto-generated method stub
+                PatientClass pc = new PatientClass("Karon", 5);
+                PatientClass pc2 = new PatientClass("Nipper", 4);
+                PatientClass pc3 = new PatientClass("Peter", 6);
+                PatientClass pc4 = new PatientClass("Oper", 2);
+                PatientClass pc5 = new PatientClass("Joe", 1);
+                PatientClass pc6 = new PatientClass("Amber", 10);
+
+
+                EmergencyRoomScheduler ec = new EmergencyRoomScheduler();
+                ec.addPatient(pc);
+                ec.updatePatientPriority(pc, 6);
+                ec.addPatient(pc5);
+                ec.addPatient(pc4);
+                ec.addPatient(pc3);
+                ec.addPatient(pc2);
+                System.out.println("============================");
+
+
+                //System.out.println(ec.toString());
+                //System.out.println(pc.toString());
+                ec.nextPatient();
+                ec.addPatient(pc6);
+                ec.nextPatient();
+
+
+        }
+
+
+}
+package emergencyroom_scedulingsystem;
+import java.util.*;
+public class PatientClass {
+        private String name;
+        private int severityLevel;
+        public PatientClass() {
+                this.name = "";
+                this.severityLevel = 0;
+        }
+        public PatientClass(String name, int severityLevel) {
+                this.name = name;
+                this.severityLevel = severityLevel;
+        }
+        //returns patient name
+        public String getName() {
+                return this.name;
+        }
+        //returns severity level of patient
+        public int getSeverityLevel() {
+                return this.severityLevel;
+        }
+        //changes or updates patient severity level
+        public void updateSeverityLevel(int newSeverityLevel) {
+                this.severityLevel = newSeverityLevel;
+        }
+        //prints out patient information
+        public String toString() {
+                String s = new String();
+                s+= this.name + "-" + this.severityLevel;
+                return s;        
+        }
+}
+package emergencyroom_scedulingsystem;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+public class EmergencyRoomScheduler {
+
+
+        private ArrayList<PatientClass> patientHeap = new ArrayList<>() ;        
+        public EmergencyRoomScheduler() {}
+
+
+        public void addPatient(PatientClass pc) {
+                patientHeap.add(pc);
+                //after adding patient, list needs to be sorted.
+                patientHeap = MinHeapSort(patientHeap);
+                System.out.println(patientHeap.toString());
+        }
+        public void nextPatient() {
+                int maxIdx = 0;
+                //        while(patientHeap.size() > 0) {
+                int j = 0;
+                maxIdx = 0;
+                //searching through array to find next highest priority patient
+                for(j = 1; j < patientHeap.size(); j++) {
+                        if(patientHeap.get(maxIdx).getSeverityLevel() < patientHeap.get(j).getSeverityLevel()) {
+                                maxIdx = j;
+                        }
+                        else {
+                                maxIdx = maxIdx;
+                        }
+                }
+                System.out.println("Next patient is " + patientHeap.get(maxIdx));
+                patientHeap.remove(maxIdx);
+                //        }
+        }
+        public void updatePatientPriority(PatientClass pc, int newSeverityLevel) {
+                pc.updateSeverityLevel(newSeverityLevel);
+                //looking for patient in list that matches pc to update status
+                for(int i = 0; i < patientHeap.size(); i++) {
+                        if(patientHeap.get(i).getName() == pc.getName()) {
+                                patientHeap.set(i, pc);
+                        }
+                }
+                System.out.println("updated patientSeverityLevel - " + patientHeap.toString());
+        }
+
+
+        public static ArrayList MinHeapSort(ArrayList<PatientClass> patientHeap2) {
+                int temp, minIdx;;
+                PatientClass temp1;
+                int index = 0, rightChild, leftChild;
+                int size = patientHeap2.size();
+                int counter = 0;
+                while(counter < 2) {
+                        while(2 * index + 1 < size) {
+                                rightChild = 2*(index) + 2;
+                                leftChild = 2*(index) + 1;
+                                minIdx= leftChild;
+
+
+                                if( rightChild < size && patientHeap2.get(rightChild).getSeverityLevel() < patientHeap2.get(leftChild).getSeverityLevel()) {
+                                        minIdx = rightChild;
+                                }
+                                //comparing smaller child with parent
+                                //if child is smaller than parent, then swap
+                                if(patientHeap2.get(minIdx).getSeverityLevel() < patientHeap2.get(index).getSeverityLevel()) {
+                                        temp1 = patientHeap2.get(index);
+                                        patientHeap2.set(index, patientHeap2.get(minIdx));
+                                        patientHeap2.set(minIdx, temp1);
+                                        //patientHeap2.add(index, temp1);
+                                }
+                                index++;
+                                //System.out.format("Min Heap array: %s\n", Arrays.toString(a));
+                        }
+                        if(counter < 2) {
+                                index = 0;
+                                counter++;
+                        }
+                }
+                //System.out.format("Min Heap array: %s\n", list.toString(patientHeap2));
+                return patientHeap2;
+        }
+        public String toString() {
+                return patientHeap.toString();
+        }
+}
