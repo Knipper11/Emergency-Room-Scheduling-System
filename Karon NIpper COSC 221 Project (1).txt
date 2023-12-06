@@ -1,10 +1,11 @@
-﻿package emergencyroom_scedulingsystem;
+package emergencyroom_scedulingsystem;
 import java.util.*;
 public class main {
 
 
         public static void main(String[] args) {
                 // TODO Auto-generated method stub
+                System.out.println("Emergency Room Shceduling System\n");
                 PatientClass pc = new PatientClass("Karon", 5);
                 PatientClass pc2 = new PatientClass("Nipper", 4);
                 PatientClass pc3 = new PatientClass("Peter", 6);
